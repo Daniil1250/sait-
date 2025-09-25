@@ -48,6 +48,42 @@
             border-left: 4px solid #4299e1;
         }
 
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border: none;
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -61,6 +97,7 @@
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
         .card:hover {
@@ -79,6 +116,10 @@
             border-top: 4px solid #d69e2e;
         }
 
+        .recipe-card {
+            border-top: 4px solid #ed8936;
+        }
+
         h2 {
             color: #2d3748;
             margin-bottom: 15px;
@@ -90,30 +131,14 @@
             margin: 15px 0 10px 0;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        th {
-            background: #f7fafc;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        tr:hover {
-            background: #f7fafc;
+        .time-badge {
+            background: #4299e1;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-left: 10px;
         }
 
         .product-list {
@@ -152,12 +177,110 @@
             padding: 15px;
             background: #f7fafc;
             border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .menu-day:hover {
+            background: #edf2f7;
         }
 
         .day-header {
             font-weight: 600;
             color: #2d3748;
             margin-bottom: 8px;
+        }
+
+        .recipe-details {
+            display: none;
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid #ed8936;
+        }
+
+        .ingredients-list, .instructions-list {
+            margin: 10px 0;
+        }
+
+        .ingredients-list li, .instructions-list li {
+            margin: 5px 0;
+            padding-left: 5px;
+        }
+
+        .tech-tip {
+            background: #fffaf0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 5px 0;
+            font-size: 0.9em;
+            border-left: 3px solid #dd6b20;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            margin: 20px;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #718096;
+        }
+
+        .recipe-tags {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #e2e8f0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
         }
 
         .advice {
@@ -173,13 +296,21 @@
                 grid-template-columns: 1fr;
             }
             
-            th, td {
-                padding: 8px 10px;
-                font-size: 0.9em;
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                padding: 12px;
             }
             
             h1 {
                 font-size: 2em;
+            }
+            
+            .modal-content {
+                margin: 10px;
+                padding: 20px;
             }
         }
     </style>
@@ -194,117 +325,26 @@
             </div>
         </header>
 
-        <div class="cards">
-            <!-- Неделя 0 -->
-            <div class="card week-card">
-                <h2>📅 Неделя 0: 1-5 октября</h2>
-                <p><strong>Бюджет: 3 500 руб.</strong></p>
-                
-                <h3>🛒 Список покупок (1 октября):</h3>
-                <div class="product-list">
-                    <div class="product-item"><span>Куриные бедра</span><span class="amount">1 кг</span></div>
-                    <div class="product-item"><span>Фарш свино-говяжий</span><span class="amount">500 г</span></div>
-                    <div class="product-item"><span>Картофель</span><span class="amount">2 кг</span></div>
-                    <div class="product-item"><span>Морковь</span><span class="amount">1 кг</span></div>
-                    <div class="product-item"><span>Капуста</span><span class="amount">1 шт</span></div>
-                    <div class="product-item"><span>Яблоки</span><span class="amount">1.5 кг</span></div>
-                    <div class="product-item"><span>Бананы</span><span class="amount">1.5 кг</span></div>
-                    <div class="product-item"><span>Яйца</span><span class="amount">10 шт</span></div>
-                    <div class="product-item"><span>Молоко</span><span class="amount">1 л</span></div>
-                    <div class="product-item"><span>Творог</span><span class="amount">400 г</span></div>
-                    <div class="product-item"><span>Сыр</span><span class="amount">200 г</span></div>
-                    <div class="total">Итого: ~3 500 руб.</div>
-                </div>
-            </div>
+        <div class="tabs">
+            <button class="tab active" onclick="openTab('recipes')">👨‍🍳 Рецепты</button>
+            <button class="tab" onclick="openTab('shopping')">🛒 Покупки</button>
+            <button class="tab" onclick="openTab('menu')">📅 Меню</button>
+            <button class="tab" onclick="openTab('weeks')">🗓️ Недели</button>
+            <button class="tab" onclick="openTab('advice')">💡 Советы</button>
+        </div>
 
-            <!-- Неделя 1 -->
-            <div class="card week-card">
-                <h2>📅 Неделя 1: 6-12 октября</h2>
-                <p><strong>Бюджет: 4 500 руб.</strong></p>
-                
-                <h3>🛒 Список покупок (6 октября):</h3>
-                <div class="product-list">
-                    <div class="product-item"><span>Куриное филе</span><span class="amount">500 г</span></div>
-                    <div class="product-item"><span>Свинина на гуляш</span><span class="amount">400 г</span></div>
-                    <div class="product-item"><span>Филе рыбы</span><span class="amount">400 г</span></div>
-                    <div class="product-item"><span>Помидоры</span><span class="amount">1 кг</span></div>
-                    <div class="product-item"><span>Огурцы</span><span class="amount">1 кг</span></div>
-                    <div class="product-item"><span>Брокколи</span><span class="amount">400 г</span></div>
-                    <div class="product-item"><span>Бананы</span><span class="amount">1.5 кг</span></div>
-                    <div class="product-item"><span>Апельсины</span><span class="amount">1 кг</span></div>
-                    <div class="product-item"><span>Йогурты</span><span class="amount">4 шт</span></div>
-                    <div class="product-item"><span>Сливки для супа</span><span class="amount">200 мл</span></div>
-                    <div class="total">Итого: ~4 500 руб.</div>
-                </div>
-            </div>
-
-            <!-- Неделя 2 -->
-            <div class="card week-card">
-                <h2>📅 Неделя 2: 13-19 октября</h2>
-                <p><strong>Бюджет: 4 500 руб.</strong></p>
-                
-                <h3>🛒 Список покупок (13 октября):</h3>
-                <div class="product-list">
-                    <div class="product-item"><span>Фарш</span><span class="amount">500 г</span></div>
-                    <div class="product-item"><span>Куриная печень</span><span class="amount">400 г</span></div>
-                    <div class="product-item"><span>Скумбрия</span><span class="amount">2 шт</span></div>
-                    <div class="product-item"><span>Кабачки</span><span class="amount">2 шт</span></div>
-                    <div class="product-item"><span>Баклажаны</span><span class="amount">2 шт</span></div>
-                    <div class="product-item"><span>Цветная капуста</span><span class="amount">1 шт</span></div>
-                    <div class="product-item"><span>Гранат</span><span class="amount">2 шт</span></div>
-                    <div class="product-item"><span>Груши</span><span class="amount">1 кг</span></div>
-                    <div class="product-item"><span>Сливки</span><span class="amount">200 мл</span></div>
-                    <div class="product-item"><span>Сыр фета</span><span class="amount">200 г</span></div>
-                    <div class="total">Итого: ~4 500 руб.</div>
-                </div>
-            </div>
-
-            <!-- Неделя 3 -->
-            <div class="card week-card">
-                <h2>📅 Неделя 3: 20-26 октября</h2>
-                <p><strong>Бюджет: 4 000 руб.</strong></p>
-                
-                <h3>🛒 Список покупок (20 октября):</h3>
-                <div class="product-list">
-                    <div class="product-item"><span>Куриные голени</span><span class="amount">1 кг</span></div>
-                    <div class="product-item"><span>Консервы рыбные</span><span class="amount">3 банки</span></div>
-                    <div class="product-item"><span>Свекла</span><span class="amount">500 г</span></div>
-                    <div class="product-item"><span>Капуста</span><span class="amount">1 шт</span></div>
-                    <div class="product-item"><span>Яблоки</span><span class="amount">2 кг</span></div>
-                    <div class="product-item"><span>Бананы</span><span class="amount">1.5 кг</span></div>
-                    <div class="product-item"><span>Яйца</span><span class="amount">20 шт</span></div>
-                    <div class="product-item"><span>Перловка</span><span class="amount">400 г</span></div>
-                    <div class="product-item"><span>Пшено</span><span class="amount">400 г</span></div>
-                    <div class="product-item"><span>Сухофрукты</span><span class="amount">300 г</span></div>
-                    <div class="total">Итого: ~4 000 руб.</div>
-                </div>
-            </div>
-
-            <!-- Неделя 4 -->
-            <div class="card week-card">
-                <h2>📅 Неделя 4: 27-31 октября</h2>
-                <p><strong>Бюджет: 2 700 руб.</strong></p>
-                
-                <h3>🛒 Список покупок (27 октября):</h3>
-                <div class="product-list">
-                    <div class="product-item"><span>Куриные сердечки</span><span class="amount">500 г</span></div>
-                    <div class="product-item"><span>Килька в томате</span><span class="amount">2 банки</span></div>
-                    <div class="product-item"><span>Лук</span><span class="amount">1 кг</span></div>
-                    <div class="product-item"><span>Морковь</span><span class="amount">500 г</span></div>
-                    <div class="product-item"><span>Капуста</span><span class="amount">0.5 шт</span></div>
-                    <div class="product-item"><span>Яблоки</span><span class="amount">1 кг</span></div>
-                    <div class="product-item"><span>Яйца</span><span class="amount">10 шт</span></div>
-                    <div class="product-item"><span>Кефир</span><span class="amount">1 л</span></div>
-                    <div class="product-item"><span>Овсяные хлопья</span><span class="amount">500 г</span></div>
-                    <div class="total">Итого: ~2 700 руб.</div>
-                </div>
+        <!-- Вкладка Рецепты -->
+        <div id="recipes" class="tab-content active">
+            <h2>👨‍🍳 Популярные рецепты с инструкциями</h2>
+            <div class="cards" id="recipes-container">
+                <!-- Рецепты добавляются через JavaScript -->
             </div>
         </div>
 
-        <!-- Базовая закупка -->
-        <div class="card shopping-card">
+        <!-- Вкладка Покупки -->
+        <div id="shopping" class="tab-content">
             <h2>🏪 Базовая закупка на месяц (1 октября)</h2>
-            <p>Эти продукты растянутся на весь октябрь</p>
+            <p>Эти продукты растянутся на весь октябрь (~3 000-3 500 руб.)</p>
             
             <div class="product-list">
                 <div class="product-item"><span>Гречка</span><span class="amount">1 кг</span></div>
@@ -321,67 +361,9 @@
                 <div class="product-item"><span>Тунец консервированный</span><span class="amount">3 банки</span></div>
                 <div class="product-item"><span>Кукуруза консервированная</span><span class="amount">2 банки</span></div>
                 <div class="product-item"><span>Овощные смеси замороженные</span><span class="amount">2 упаковки</span></div>
-                <div class="total">Итого: ~3 000-3 500 руб.</div>
-            </div>
-        </div>
-
-        <!-- Пример меню на неделю -->
-        <div class="card menu-card">
-            <h2>🍳 Пример меню на неделю (1-5 октября)</h2>
-            
-            <div class="menu-day">
-                <div class="day-header">Среда 1 октября:</div>
-                <p>🍎 Завтрак: Овсянка с яблоком</p>
-                <p>🍲 Обед: Щи из свежей капусты (варим на 2 дня)</p>
-                <p>🍗 Ужин: Куриные бедра в аэрогриле + рис</p>
             </div>
 
-            <div class="menu-day">
-                <div class="day-header">Четверг 2 октября:</div>
-                <p>🍌 Завтрак: Творог с бананом</p>
-                <p>🍲 Обед: Щи (второй день)</p>
-                <p>🍔 Ужин: Котлеты из фарша в аэрогриле + гречка</p>
-            </div>
-
-            <div class="menu-day">
-                <div class="day-header">Пятница 3 октября:</div>
-                <p>🧀 Завтрак: Омлет с сыром в аэрогриле</p>
-                <p>🍝 Обед: Макароны с тунцом и кукурузой</p>
-                <p>🥗 Ужин: Котлеты + салат из капусты</p>
-            </div>
-
-            <div class="menu-day">
-                <div class="day-header">Суббота 4 октября:</div>
-                <p>🥤 Завтрак: Смузи (банан + кефир + овсянка)</p>
-                <p>🥦 Обед: Суп-пюре из цветной капусты</p>
-                <p>🍟 Ужин: Курица с картошкой в аэрогриле</p>
-            </div>
-
-            <div class="menu-day">
-                <div class="day-header">Воскресенье 5 октября:</div>
-                <p>🍳 Завтрак: Яичница с помидорами</p>
-                <p>🍽️ Обед: "Остатки дня" (доедаем всё из холодильника)</p>
-                <p>🥒 Ужин: Легкий салат из огурца и яйца</p>
-            </div>
-        </div>
-
-        <!-- Советы -->
-        <div class="advice">
-            <h2>💡 Важные советы</h2>
-            <ul>
-                <li>🛒 Покупайте сезонные овощи и фрукты - они дешевле</li>
-                <li>🔥 Используйте аэрогриль для здорового приготовления без масла</li>
-                <li>🧊 Замораживайте хлеб и часть продуктов</li>
-                <li>📱 Ведите учет трат в приложении</li>
-                <li>💳 Кредитку используйте только для супер-акций</li>
-                <li>🍲 Готовьте с запасом на 2-3 дня</li>
-                <li>🚫 Не ходите в магазин голодным</li>
-            </ul>
-        </div>
-
-        <!-- Сводная таблица бюджета -->
-        <div class="card">
-            <h2>💰 Сводный бюджет на октябрь 2025</h2>
+            <h3>📊 Сводная таблица бюджета на октябрь 2025</h3>
             <table>
                 <tr>
                     <th>Неделя</th>
@@ -427,6 +409,585 @@
                 </tr>
             </table>
         </div>
+
+        <!-- Вкладка Меню -->
+        <div id="menu" class="tab-content">
+            <h2>🍳 Пример меню на первую неделю (1-5 октября)</h2>
+            
+            <div class="menu-day" onclick="showDayMenu('Среда 1 октября', ['🍎 Завтрак: Овсянка с яблоком', '🍲 Обед: Щи из свежей капусты (варим на 2 дня)', '🍗 Ужин: Куриные бедра в аэрогриле + рис'])">
+                <div class="day-header">Среда 1 октября</div>
+                <p>🍎 Завтрак: Овсянка с яблоком</p>
+                <p>🍲 Обед: Щи из свежей капусты (варим на 2 дня)</p>
+                <p>🍗 Ужин: Куриные бедра в аэрогриле + рис</p>
+            </div>
+
+            <div class="menu-day" onclick="showDayMenu('Четверг 2 октября', ['🍌 Завтрак: Творог с бананом', '🍲 Обед: Щи (второй день)', '🍔 Ужин: Котлеты из фарша в аэрогриле + гречка'])">
+                <div class="day-header">Четверг 2 октября</div>
+                <p>🍌 Завтрак: Творог с бананом</p>
+                <p>🍲 Обед: Щи (второй день)</p>
+                <p>🍔 Ужин: Котлеты из фарша в аэрогриле + гречка</p>
+            </div>
+
+            <div class="menu-day" onclick="showDayMenu('Пятница 3 октября', ['🧀 Завтрак: Омлет с сыром в аэрогриле', '🍝 Обед: Макароны с тунцом и кукурузой', '🥗 Ужин: Котлеты + салат из капусты'])">
+                <div class="day-header">Пятница 3 октября</div>
+                <p>🧀 Завтрак: Омлет с сыром в аэрогриле</p>
+                <p>🍝 Обед: Макароны с тунцом и кукурузой</p>
+                <p>🥗 Ужин: Котлеты + салат из капусты</p>
+            </div>
+
+            <div class="menu-day" onclick="showDayMenu('Суббота 4 октября', ['🥤 Завтрак: Смузи (банан + кефир + овсянка)', '🥦 Обед: Суп-пюре из цветной капусты', '🍟 Ужин: Курица с картошкой в аэрогриле'])">
+                <div class="day-header">Суббота 4 октября</div>
+                <p>🥤 Завтрак: Смузи (банан + кефир + овсянка)</p>
+                <p>🥦 Обед: Суп-пюре из цветной капусты</p>
+                <p>🍟 Ужин: Курица с картошкой в аэрогриле</p>
+            </div>
+
+<div class="menu-day" onclick="showDayMenu('Воскресенье 5 октября', ['🍳 Завтрак: Яичница с помидорами', '🍽️ Обед: \"Остатки дня\" (доедаем всё из холодильника)', '🥒 Ужин: Легкий салат из огурца и яйца'])">                <div class="day-header">Воскресенье 5 октября</div>
+                <p>🍳 Завтрак: Яичница с помидорами</p>
+                <p>🍽️ Обед: "Остатки дня" (доедаем всё из холодильника)</p>
+                <p>🥒 Ужин: Легкий салат из огурца и яйца</p>
+            </div>
+        </div>
+
+        <!-- Вкладка Недели -->
+        <div id="weeks" class="tab-content">
+            <div class="cards">
+                <!-- Неделя 0 -->
+                <div class="card week-card">
+                    <h2>📅 Неделя 0: 1-5 октября</h2>
+                    <p><strong>Бюджет: 3 500 руб.</strong></p>
+                    
+                    <h3>🛒 Список покупок (1 октября):</h3>
+                    <div class="product-list">
+                        <div class="product-item"><span>Куриные бедра</span><span class="amount">1 кг</span></div>
+                        <div class="product-item"><span>Фарш свино-говяжий</span><span class="amount">500 г</span></div>
+                        <div class="product-item"><span>Картофель</span><span class="amount">2 кг</span></div>
+                        <div class="product-item"><span>Морковь</span><span class="amount">1 кг</span></div>
+                        <div class="product-item"><span>Капуста</span><span class="amount">1 шт</span></div>
+                        <div class="product-item"><span>Яблоки</span><span class="amount">1.5 кг</span></div>
+                        <div class="product-item"><span>Бананы</span><span class="amount">1.5 кг</span></div>
+                        <div class="product-item"><span>Яйца</span><span class="amount">10 шт</span></div>
+                        <div class="product-item"><span>Молоко</span><span class="amount">1 л</span></div>
+                        <div class="product-item"><span>Творог</span><span class="amount">400 г</span></div>
+                        <div class="product-item"><span>Сыр</span><span class="amount">200 г</span></div>
+                        <div class="total">Итого: ~3 500 руб.</div>
+                    </div>
+                </div>
+
+                <!-- Неделя 1 -->
+                <div class="card week-card">
+                    <h2>📅 Неделя 1: 6-12 октября</h2>
+                    <p><strong>Бюджет: 4 500 руб.</strong></p>
+                    
+                    <h3>🛒 Список покупок (6 октября):</h3>
+                    <div class="product-list">
+                        <div class="product-item"><span>Куриное филе</span><span class="amount">500 г</span></div>
+                        <div class="product-item"><span>Свинина на гуляш</span><span class="amount">400 г</span></div>
+                        <div class="product-item"><span>Филе рыбы</span><span class="amount">400 г</span></div>
+                        <div class="product-item"><span>Помидоры</span><span class="amount">1 кг</span></div>
+                        <div class="product-item"><span>Огурцы</span><span class="amount">1 кг</span></div>
+                        <div class="product-item"><span>Брокколи</span><span class="amount">400 г</span></div>
+                        <div class="product-item"><span>Бананы</span><span class="amount">1.5 кг</span></div>
+                        <div class="product-item"><span>Апельсины</span><span class="amount">1 кг</span></div>
+                        <div class="product-item"><span>Йогурты</span><span class="amount">4 шт</span></div>
+                        <div class="product-item"><span>Сливки для супа</span><span class="amount">200 мл</span></div>
+                        <div class="total">Итого: ~4 500 руб.</div>
+                    </div>
+                </div>
+
+                <!-- Неделя 2 -->
+                <div class="card week-card">
+                    <h2>📅 Неделя 2: 13-19 октября</h2>
+                    <p><strong>Бюджет: 4 500 руб.</strong></p>
+                    
+                    <h3>🛒 Список покупок (13 октября):</h3>
+                    <div class="product-list">
+                        <div class="product-item"><span>Фарш</span><span class="amount">500 г</span></div>
+                        <div class="product-item"><span>Куриная печень</span><span class="amount">400 г</span></div>
+                        <div class="product-item"><span>Скумбрия</span><span class="amount">2 шт</span></div>
+                        <div class="product-item"><span>Кабачки</span><span class="amount">2 шт</span></div>
+                        <div class="product-item"><span>Баклажаны</span><span class="amount">2 шт</span></div>
+                        <div class="product-item"><span>Цветная капуста</span><span class="amount">1 шт</span></div>
+                        <div class="product-item"><span>Гранат</span><span class="amount">2 шт</span></div>
+                        <div class="product-item"><span>Груши</span><span class="amount">1 кг</span></div>
+                        <div class="product-item"><span>Сливки</span><span class="amount">200 мл</span></div>
+                        <div class="product-item"><span>Сыр фета</span><span class="amount">200 г</span></div>
+                        <div class="total">Итого: ~4 500 руб.</div>
+                    </div>
+                </div>
+
+                <!-- Неделя 3 -->
+                <div class="card week-card">
+                    <h2>📅 Неделя 3: 20-26 октября</h2>
+                    <p><strong>Бюджет: 4 000 руб.</strong></p>
+                    
+                    <h3>🛒 Список покупок (20 октября):</h3>
+                    <div class="product-list">
+                        <div class="product-item"><span>Куриные голени</span><span class="amount">1 кг</span></div>
+                        <div class="product-item"><span>Консервы рыбные</span><span class="amount">3 банки</span></div>
+                        <div class="product-item"><span>Свекла</span><span class="amount">500 г</span></div>
+                        <div class="product-item"><span>Капуста</span><span class="amount">1 шт</span></div>
+                        <div class="product-item"><span>Яблоки</span><span class="amount">2 кг</span></div>
+                        <div class="product-item"><span>Бананы</span><span class="amount">1.5 кг</span></div>
+                        <div class="product-item"><span>Яйца</span><span class="amount">20 шт</span></div>
+                        <div class="product-item"><span>Перловка</span><span class="amount">400 г</span></div>
+                        <div class="product-item"><span>Пшено</span><span class="amount">400 г</span></div>
+                        <div class="product-item"><span>Сухофрукты</span><span class="amount">300 г</span></div>
+                        <div class="total">Итого: ~4 000 руб.</div>
+                    </div>
+                </div>
+
+                <!-- Неделя 4 -->
+                <div class="card week-card">
+                    <h2>📅 Неделя 4: 27-31 октября</h2>
+                    <p><strong>Бюджет: 2 700 руб.</strong></p>
+                    
+                    <h3>🛒 Список покупок (27 октября):</h3>
+                    <div class="product-list">
+                        <div class="product-item"><span>Куриные сердечки</span><span class="amount">500 г</span></div>
+                        <div class="product-item"><span>Килька в томате</span><span class="amount">2 банки</span></div>
+                        <div class="product-item"><span>Лук</span><span class="amount">1 кг</span></div>
+                        <div class="product-item"><span>Морковь</span><span class="amount">500 г</span></div>
+                        <div class="product-item"><span>Капуста</span><span class="amount">0.5 шт</span></div>
+                        <div class="product-item"><span>Яблоки</span><span class="amount">1 кг</span></div>
+                        <div class="product-item"><span>Яйца</span><span class="amount">10 шт</span></div>
+                        <div class="product-item"><span>Кефир</span><span class="amount">1 л</span></div>
+                        <div class="product-item"><span>Овсяные хлопья</span><span class="amount">500 г</span></div>
+                        <div class="total">Итого: ~2 700 руб.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка Советы -->
+        <div id="advice" class="tab-content">
+            <div class="advice">
+                <h2>💡 Важные советы по экономии и приготовлению</h2>
+                <ul>
+                    <li>🛒 <strong>Покупайте сезонные овощи и фрукты</strong> - они дешевле и вкуснее</li>
+                    <li>🔥 <strong>Используйте аэрогриль максимально</strong> - готовка без масла, разогрев, выпечка</li>
+                    <li>🧊 <strong>Замораживайте хлеб и часть продуктов</strong> - ничего не пропадет</li>
+                    <li>📱 <strong>Ведите учет трат в приложении</strong> - контролируйте бюджет</li>
+                    <li>💳 <strong>Кредитку используйте только для супер-акций</strong> - не попадайте в долги</li>
+                    <li>🍲 <strong>Готовьте с запасом на 2-3 дня</strong> - экономия времени и энергии</li>
+                    <li>🚫 <strong>Не ходите в магазин голодным</strong> - избегайте импульсных покупок</li>
+                    <li>🥘 <strong>Используйте блендер для супов-пюре</strong> - быстро и полезно</li>
+                    <li>📅 <strong>Планируйте меню на неделю вперед</strong> - покупайте только нужное</li>
+                    <li>🌱 <strong>Готовьте вегетарианские блюда 1-2 раза в неделю</strong> - экономия на мясе</li>
+                </ul>
+            </div>
+
+            <div class="advice">
+                <h2>⚡ Советы по использованию техники</h2>
+                <ul>
+                    <li>🎛️ <strong>Аэрогриль Sakura SA-7684BK</strong> - используйте 8 программ для разных блюд</li>
+                    <li>⏱️ <strong>Таймер и сенсорное управление</strong> - точная настройка времени приготовления</li>
+                    <li>🍗 <strong>Режим "Мясо"</strong> - идеален для курицы и рыбы (200°C, 25-30 мин)</li>
+                    <li>🥦 <strong>Режим "Овощи"</strong> - для здорового приготовления (180°C, 15-20 мин)</li>
+                    <li>🍞 <strong>Режим "Выпечка"</strong> - для гренок и маленьких пирогов (160°C, 10-15 мин)</li>
+                    <li>🌀 <strong>Блендер для супов-пюре</strong> - взбивайте горячие супы осторожно</li>
+                    <li>🥤 <strong>Режим "Смузи"</strong> - для быстрых и полезных завтраков</li>
+                    <li>🍔 <strong>Измельчение фарша</strong> - используйте блендер для однородной консистенции</li>
+                </ul>
+            </div>
+        </div>
     </div>
+
+    <!-- Модальное окно для рецепта -->
+    <div class="modal" id="recipe-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">×</span>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // База данных рецептов
+        const recipes = [
+            {
+                id: 1,
+                name: "Куриные бедра в аэрогриле",
+                time: "35 мин",
+                difficulty: "легко",
+                ingredients: [
+                    "4 куриных бедра",
+                    "2 ст.л. оливкового масла",
+                    "1 ч.л. паприки",
+                    "1 ч.л. чесночного порошка",
+                    "соль, перец по вкусу"
+                ],
+                instructions: [
+                    "Куриные бедра промыть и обсушить",
+                    "Смешать все специи с маслом",
+                    "Натереть бедра маринадом со всех сторон",
+                    "Выложить в аэрогриль на решетку",
+                    "Готовить при 200°C 25-30 минут до золотистой корочки"
+                ],
+                tips: [
+                    "Аэрогриль: режим 'Мясо' или 200°C 25-30 мин",
+                    "Переверните бедра через 15 минут для равномерного приготовления",
+                    "Подавайте с рисом или овощами"
+                ]
+            },
+            {
+                id: 2,
+                name: "Суп-пюре из брокколи",
+                time: "25 мин",
+                difficulty: "легко",
+                ingredients: [
+                    "1 головка брокколи",
+                    "1 картофелина",
+                    "1 луковица",
+                    "500 мл овощного бульона",
+                    "100 мл сливок",
+                    "соль, перец, мускатный орех"
+                ],
+                instructions: [
+                    "Овощи почистить и нарезать кубиками",
+                    "Варить в бульоне 15 минут до мягкости",
+                    "Измельчить блендером до однородности",
+                    "Добавить сливки и специи",
+                    "Прогреть еще 2-3 минуты"
+                ],
+                tips: [
+                    "Блендер: используйте режим 'Супы-пюре'",
+                    "Для диетического варианта замените сливки на молоко",
+                    "Подавайте с гренками из аэрогриля"
+                ]
+            },
+            {
+                id: 3,
+                name: "Котлеты из фарша в аэрогриле",
+                time: "30 мин",
+                difficulty: "средне",
+                ingredients: [
+                    "500 г фарша",
+                    "1 луковица",
+                    "1 яйцо",
+                    "2 ломтика хлеба",
+                    "50 мл молока",
+                    "соль, перец, специи"
+                ],
+                instructions: [
+                    "Хлеб замочить в молоке",
+                    "Лук измельчить в блендере",
+                    "Смешать фарш, лук, яйцо и размоченный хлеб",
+                    "Сформировать котлеты",
+                    "Готовить в аэрогриле 20-25 минут при 180°C"
+                ],
+                tips: [
+                    "Блендер: режим 'Измельчение' для лука",
+                    "Аэрогриль: 180°C 20-25 мин, переверните через 10 мин",
+                    "Для хрустящей корочки смажьте котлеты маслом"
+                ]
+            },
+            {
+                id: 4,
+                name: "Овощная запеканка в аэрогриле",
+                time: "40 мин",
+                difficulty: "легко",
+                ingredients: [
+                    "2 кабачка",
+                    "2 картофелины",
+                    "1 баклажан",
+                    "2 помидора",
+                    "150 г сыра",
+                    "2 яйца",
+                    "100 мл сметаны"
+                ],
+                instructions: [
+                    "Овощи нарезать тонкими кружками",
+                    "Выложить слоями в форму для аэрогриля",
+                    "Смешать яйца со сметаной и специями",
+                    "Залить овощную смесь",
+                    "Посыпать сыром и готовить 30 минут при 180°C"
+                ],
+                tips: [
+                    "Аэрогриль: режим 'Выпечка' 180°C 30-35 мин",
+                    "Можно добавить курицу или фарш для сытности",
+                    "Подавайте со свежей зеленью"
+                ]
+            },
+                 {
+                id: 5,
+                name: "Смузи для завтрака",
+                time: "5 мин",
+                difficulty: "очень легко",
+                ingredients: [
+                    "1 банан",
+                    "100 г замороженных ягод",
+                    "150 мл йогурта",
+                    "50 мл молока",
+                    "1 ст.л. овсяных хлопьев",
+                    "мед по вкусу"
+                ],
+                instructions: [
+                    "Все ингредиенты поместить в блендер",
+                    "Измельчать на высокой скорости 1-2 минуты",
+                    "Проверить консистенцию",
+                    "При необходимости добавить молоко",
+                    "Перелить в стакан и подавать сразу"
+                ],
+                tips: [
+                    "Блендер: режим 'Смузи' или максимальная скорость",
+                    "Замороженные ягоды не требуют разморозки",
+                    "Для протеинового варианта добавьте творог"
+                ]
+            },
+            {
+                id: 6,
+                name: "Рыба в аэрогриле с овощами",
+                time: "20 мин",
+                difficulty: "легко",
+                ingredients: [
+                    "2 филе белой рыбы",
+                    "1 цуккини",
+                    "1 болгарский перец",
+                    "1 лимон",
+                    "оливковое масло",
+                    "свежие травы"
+                ],
+                instructions: [
+                    "Рыбу посолить, поперчить, сбрызнуть лимоном",
+                    "Овощи нарезать крупными кусками",
+                    "Выложить все на решетку аэрогриля",
+                    "Готовить 15-18 минут при 190°C",
+                    "Подавать с дольками лимона"
+                ],
+                tips: [
+                    "Аэрогриль: 190°C 15-18 мин для рыбы",
+                    "Овощи готовятся одновременно с рыбой",
+                    "Идеально подходит для филе трески или дорадо"
+                ]
+            }
+        ];
+
+        // Функция для отображения рецептов
+        function renderRecipes() {
+            const container = document.getElementById('recipes-container');
+            
+            recipes.forEach(recipe => {
+                const recipeCard = document.createElement('div');
+                recipeCard.className = 'card recipe-card';
+                recipeCard.onclick = () => openRecipeModal(recipe);
+                
+                recipeCard.innerHTML = `
+                    <h2>${recipe.name} <span class="time-badge">⏱️ ${recipe.time}</span></h2>
+                    <div class="recipe-tags">
+                        <span class="tag">${recipe.difficulty}</span>
+                        <span class="tag">🍽️ ${recipe.ingredients.length} ингредиентов</span>
+                    </div>
+                    <p><strong>Ингредиенты:</strong> ${recipe.ingredients.slice(0, 3).join(', ')}...</p>
+                    <div class="tech-tip">${getRandomTip(recipe)}</div>
+                `;
+                
+                container.appendChild(recipeCard);
+            });
+        }
+
+        // Функция для получения случайного совета по технике
+        function getRandomTip(recipe) {
+            const tips = recipe.tips;
+            return tips[Math.floor(Math.random() * tips.length)];
+        }
+
+        // Функция для открытия модального окна с рецептом
+        function openRecipeModal(recipe) {
+            const modal = document.getElementById('recipe-modal');
+            const content = document.getElementById('modal-content');
+            
+            const cookingTime = calculateCookingTime(recipe);
+            
+            content.innerHTML = `
+                <h2>${recipe.name}</h2>
+                <div class="recipe-tags">
+                    <span class="tag">⏱️ ${recipe.time}</span>
+                    <span class="tag">📊 ${recipe.difficulty}</span>
+                    <span class="tag">🍽️ ${recipe.ingredients.length} ингредиентов</span>
+                </div>
+                
+                <div style="background: #f0f4ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                    <strong>🕒 Время приготовления:</strong><br>
+                    • ${cookingTime.preparation}<br>
+                    • ${cookingTime.cooking}<br>
+                    • ${cookingTime.total}
+                </div>
+                
+                <h3>🥬 Ингредиенты:</h3>
+                <ul class="ingredients-list">
+                    ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                </ul>
+                
+                <h3>👨‍🍳 Инструкция по приготовлению:</h3>
+                <ol class="instructions-list">
+                    ${recipe.instructions.map((step, index) => `<li>${step}</li>`).join('')}
+                </ol>
+                
+                <h3>💡 Советы по использованию техники:</h3>
+                <div class="tech-tips">
+                    ${recipe.tips.map(tip => `<div class="tech-tip">${tip}</div>`).join('')}
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #f0fff4; border-radius: 8px;">
+                    <strong>📝 Полезные заметки:</strong>
+                    <p>• Время приготовления указано примерно</p>
+                    <p>• Температура и время могут отличаться в зависимости от модели аэрогриля</p>
+                    <p>• Всегда проверяйте готовность мяса и рыбы</p>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        // Функция для закрытия модального окна
+        function closeModal() {
+            document.getElementById('recipe-modal').style.display = 'none';
+        }
+
+        // Функция для переключения вкладок
+        function openTab(tabName) {
+            // Скрыть все вкладки
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Убрать активный класс со всех кнопок
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Показать выбранную вкладку и активировать кнопку
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Функция для показа меню дня
+        function showDayMenu(dayName, meals) {
+            const modal = document.getElementById('recipe-modal');
+            const content = document.getElementById('modal-content');
+            
+            content.innerHTML = `
+                <h2>${dayName}</h2>
+                <div style="background: #f0f4ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                    <strong>🍽️ Меню на день:</strong><br>
+                    ${meals.map(meal => `• ${meal}`).join('<br>')}
+                </div>
+                
+                <h3>📋 Список покупок на этот день:</h3>
+                <ul class="ingredients-list">
+                    <li>Продукты из базовой закупки</li>
+                    <li>Свежие овощи по сезону</li>
+                    <li>Молочные продукты</li>
+                    <li>Свежая зелень</li>
+                </ul>
+                
+                <h3>💡 Советы по приготовлению:</h3>
+                <div class="tech-tips">
+                    <div class="tech-tip">Готовьте с запасом на 2-3 дня для экономии времени</div>
+                    <div class="tech-tip">Используйте аэрогриль для одновременного приготовления нескольких блюд</div>
+                    <div class="tech-tip">Остатки ужина можно использовать для обеда на следующий день</div>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        // Дополнительная функция для расчета времени приготовления
+        function calculateCookingTime(recipe) {
+            const time = parseInt(recipe.time.replace(' мин', ''));
+            const prepTime = Math.floor(time * 0.3);
+            return {
+                preparation: `${prepTime} минут подготовка`,
+                cooking: `${time} минут готовка`,
+                total: `${time + prepTime} минут всего`
+            };
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            const modal = document.getElementById('recipe-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            renderRecipes();
+            
+            // Добавляем обработчики для карточек меню
+            document.querySelectorAll('.menu-day').forEach(day => {
+                day.style.cursor = 'pointer';
+            });
+        });
+
+        // Функция для создания списка покупок
+        function generateShoppingList() {
+            const shoppingList = {
+                'Базовые продукты': [
+                    'Гречка 1 кг',
+                    'Рис 1 кг', 
+                    'Овсяные хлопья 500 г',
+                    'Макароны 3-4 пачки',
+                    'Мука 1 кг',
+                    'Сахар 1 кг',
+                    'Масло растительное 1 л',
+                    'Соль 1 кг',
+                    'Чай 200 г',
+                    'Специи (перец, паприка, травы)'
+                ],
+                'Овощи и фрукты': [
+                    'Картофель 5-6 кг',
+                    'Морковь 2-3 кг',
+                    'Лук 3-4 кг',
+                    'Капуста 2-3 шт',
+                    'Помидоры 2-3 кг',
+                    'Огурцы 2-3 кг',
+                    'Яблоки 5-6 кг',
+                    'Бананы 5-6 кг',
+                    'Сезонные фрукты'
+                ],
+                'Мясо и рыба': [
+                    'Куриные бедра 1 кг',
+                    'Куриное филе 500 г',
+                    'Фарш 1 кг',
+                    'Рыба 1-1.5 кг',
+                    'Куриная печень 400 г'
+                ],
+                'Молочные продукты': [
+                    'Молоко 4-5 л',
+                    'Яйца 60 шт',
+                    'Творог 1-1.5 кг',
+                    'Сыр 600-800 г',
+                    'Йогурты 8-10 шт',
+                    'Сметана 400-500 г'
+                ]
+            };
+            
+            return shoppingList;
+        }
+
+        // Функция для расчета экономии
+        function calculateSavings() {
+            const dailyBudget = 29200 / 31; // 942 руб/день
+            const plannedDaily = 19200 / 31; // 619 руб/день
+            const savings = dailyBudget - plannedDaily;
+            
+            return {
+                dailyBudget: Math.round(dailyBudget),
+                plannedDaily: Math.round(plannedDaily),
+                savings: Math.round(savings),
+                monthlySavings: Math.round(savings * 31)
+            };
+        }
+
+        // Показываем расчет экономии при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            const savings = calculateSavings();
+            console.log(`Экономия: ${savings.savings} руб/день, ${savings.monthlySavings} руб/месяц`);
+        });
+    </script>
 </body>
 </html>
